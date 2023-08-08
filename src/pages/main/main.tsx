@@ -1,7 +1,8 @@
 import { getDocs, collection } from "firebase/firestore";
-import { db } from "../../config/firebase";
+import { db, auth } from "../../config/firebase";
 import { useEffect, useState } from "react";
 import { Post } from "./post";
+import { Link } from "react-router-dom";
 
 export interface IPost {
   id: string;
@@ -12,6 +13,7 @@ export interface IPost {
 }
 
 export const Main = () => {
+  const [showPosts, setShowPosts] = useState<boolean>(false);
   const [postsList, setPostsList] = useState<IPost[] | null>(null);
   const postsRef = collection(db, "posts");
 
@@ -23,15 +25,24 @@ export const Main = () => {
   };
 
   useEffect(() => {
-    getPosts();
+    if (auth.currentUser) {
+      setShowPosts(true);
+      getPosts();
+    } else {
+      setShowPosts(false);
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  return (
-    <div>
-      {postsList?.map((post) => (
-        <Post post={post} key={post.id}/>
-      ))}
-    </div>
-  );
+  if (showPosts) {
+    return (
+      <div>
+        {postsList?.map((post) => (
+          <Post post={post} key={post.id} />
+        ))}
+      </div>
+    );
+  } else {
+    return <div><Link to="/login">Log in</Link> to see posts!</div>;
+  }
 };
