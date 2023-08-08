@@ -7,7 +7,7 @@ import {
   deleteDoc,
   doc,
 } from "firebase/firestore";
-import { Post as IPost } from "./main";
+import { IPost } from "./main";
 import { auth, db } from "../../config/firebase";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { useEffect, useState } from "react";
@@ -80,6 +80,7 @@ export const Post = (props: Props) => {
 
   useEffect(() => {
     getLikes();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
